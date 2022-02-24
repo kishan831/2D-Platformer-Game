@@ -6,21 +6,26 @@ public class Player : MonoBehaviour {
 
     [SerializeField] public float MoveSpeed,JumpForce,Runspeed;
     private Rigidbody2D rb;
-    [SerializeField] private Animator anim;
+
+    [SerializeField] private LayerMask GroundLayer;
+
+    [SerializeField] private Transform groundCheckpos;
+
+    private BoxCollider2D boxcol2d;
+
+    private Animator anim;
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        boxcol2d = GetComponent<BoxCollider2D>();
     }
 
     private void Update() {
 
         Move();
 
-        if(Input.GetKeyDown(KeyCode.Space) ) {
-        rb.AddForce(new Vector2(0,JumpForce),ForceMode2D.Impulse);
-        SetJumpAnimation();
-        }
+        HandleJump();
 
         if(Input.GetKeyDown(KeyCode.C)) {
         SetCrouchAnimation();
@@ -50,7 +55,7 @@ public class Player : MonoBehaviour {
              anim.SetBool("isRun",true);
         }
 
-        else if( movement < 0 && Input.GetKey(KeyCode.A) ) {
+        else if( movement < 0 && Input.GetKey(KeyCode.A)) {
 
             MoveSpeed = Runspeed;
             Vector3 temp = transform.localScale;
@@ -62,6 +67,21 @@ public class Player : MonoBehaviour {
         else {
             anim.SetBool("isRun",false);
             }
+    }
+
+    bool IsGrounded() {
+        return Physics2D.Raycast(groundCheckpos.position,Vector2.down,0.1f,GroundLayer);
+    }
+
+    void HandleJump() {
+        
+        if(Input.GetKeyDown(KeyCode.Space) && IsGrounded()) {
+
+          rb.AddForce(new Vector2(0,JumpForce),ForceMode2D.Impulse);
+          SetJumpAnimation();
+
+        }
+
     }
             
 
