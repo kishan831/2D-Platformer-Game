@@ -4,52 +4,26 @@ using UnityEngine;
 
 public class AIPetrol : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float speed, distance;
 
-     public bool MustPetrol;
-     private bool mustTurn;
+    private bool movingRight = true;
 
-     public float WalkSpeed;
+    public Transform grounddetect;
 
-     public LayerMask groundlayer;
+    void Update() {
+        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        RaycastHit2D groundinfo  = Physics2D.Raycast(grounddetect.position,Vector2.down,distance);
+        if(groundinfo.collider == false ) {
+            if(movingRight) {
+                transform.eulerAngles = new Vector3(0,-180,0);
+                movingRight = false;
+            }
 
-     public Transform groundcheckpos;
-
-     public Rigidbody2D rb;
-
-     public Collider2D col;
-
-    void Start()
-    {
-        MustPetrol = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(MustPetrol) {
-            petrol();
+            else {
+                transform.eulerAngles = new Vector3(0,0,0);
+                movingRight = true;
+            }
         }
-    }
-    
-    private void FixedUpdate() {
-        if(MustPetrol) {
-          mustTurn = !Physics2D.OverlapCircle(groundcheckpos.position,.1f,groundlayer);
-        }
-    }
 
-    void petrol() {
-       if(mustTurn || col.IsTouchingLayers(groundlayer)) {
-          flip();
-       }
-
-       rb.velocity = new Vector2(WalkSpeed * Time.deltaTime, rb.velocity.y);
-    }
-
-    void flip() {
-        MustPetrol = false;
-        transform.localScale = new Vector2(transform.localScale.x * -1,transform.localScale.y);
-        WalkSpeed *= -1;
-        MustPetrol = true;
     }
 }
