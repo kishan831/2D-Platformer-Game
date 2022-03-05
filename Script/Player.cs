@@ -1,30 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
+    //Some Value for inspector panel
+    
     [SerializeField] public float MoveSpeed,JumpForce,Runspeed;
     private Rigidbody2D rb;
-
+     
+    //Appling LayerMask 
     [SerializeField] private LayerMask GroundLayer;
 
-    [SerializeField] private Transform groundCheckpos;
+   //Checking For Ground Pos.
+   [SerializeField] private Transform groundCheckpos;
 
     private BoxCollider2D boxcol2d;
 
     private Animator anim;
 
+    public ScoreController scoreController;
+    public GameOverController gameOverController;
+
     private void Start() {
-        rb = GetComponent<Rigidbody2D>();
+        rb = gameObject.GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         boxcol2d = GetComponent<BoxCollider2D>();
     }
 
+
+    //Doing Actions For Every Frame
     private void Update() {
 
         Move();
-
         HandleJump();
 
         if(Input.GetKeyDown(KeyCode.C)) {
@@ -32,15 +41,8 @@ public class Player : MonoBehaviour {
         }
 
     }
-
-    void SetJumpAnimation() { 
-            anim.SetTrigger("isJump");
-    }
-
-    void SetCrouchAnimation() {
-            anim.SetTrigger("isCrouch");       
-    }
-
+    
+    //Actions For Movement Of Player
     private void Move() {
 
         var movement = Input.GetAxisRaw("Horizontal");
@@ -64,15 +66,18 @@ public class Player : MonoBehaviour {
             anim.SetBool("isRun",true);
         }
 
-        else {
+        else  {
             anim.SetBool("isRun",false);
             }
     }
 
+    //Checking Player Is On The Ground or Not
     bool IsGrounded() {
         return Physics2D.Raycast(groundCheckpos.position,Vector2.down,0.1f,GroundLayer);
     }
 
+
+    //setting Up Jump
     void HandleJump() {
         
         if(Input.GetKeyDown(KeyCode.Space) && IsGrounded()) {
@@ -82,6 +87,26 @@ public class Player : MonoBehaviour {
 
         }
 
+    }
+
+    //Different Animation As per Need. 
+    void SetJumpAnimation() {
+        anim.SetTrigger("isJump");
+    }
+
+    void SetCrouchAnimation() {
+            anim.SetTrigger("isCrouch");       
+    }
+
+    public void Collectibles() {
+        Debug.Log("Key Collected");
+        scoreController.IncScore(2);
+    }
+
+    public void AttackOnPlayer() {
+        Debug.Log("Player Is Being Attacked");
+        gameOverController.PlayerDied();
+    
     }
             
 
