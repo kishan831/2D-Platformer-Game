@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EndGame : MonoBehaviour
+public class PlayerGoesOfScreen : MonoBehaviour
 {
-      private void OnTriggerEnter2D(Collider2D Collision) {
+      private void OnTriggerEnter2D(Collider2D collider2d) {
         if(Collision.gameObject.GetComponent<Player>() != null) {
             Debug.Log("Player Died");
         }
