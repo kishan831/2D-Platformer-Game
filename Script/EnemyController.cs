@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-        private void OnTriggerEnter2D(Collider2D Collision) {
+        private void OnCollisionEnter2D(Collision2D Collision) {
              
         if(Collision.gameObject.GetComponent<Player>() != null) {
             Player player = Collision.gameObject.GetComponent<Player>();
