@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class KeyController : MonoBehaviour
 {
-         private void OnTriggerEnter2D(Collider2D Collision) {
+         private void OnTriggerEnter2D(Collider2D collider2D) {
              
-        if(Collision.gameObject.GetComponent<Player>() != null) {
-            Player player = Collision.gameObject.GetComponent<Player>();
+        if(collider2D.gameObject.GetComponent<Player>() != null) {
+            Player player = collider2D.gameObject.GetComponent<Player>();
             player.Collectibles();
             Destroy(gameObject);
         }
