@@ -7,8 +7,51 @@ using UnityEngine.SceneManagement;
 public class GameOverController : MonoBehaviour
 {
     public Button restart;
+    public GameObject Heart1,Heart2,Heart3,gameOver;
+    public static int health;
 
-    Player player1;
+    void Start() {
+        health = 3;
+        Heart1.gameObject.SetActive(true);
+        Heart2.gameObject.SetActive(true);
+        Heart3.gameObject.SetActive(true);
+        gameOver.gameObject.SetActive(false);
+    }
+
+    void Update() {
+        if(health > 3) {
+            health = 3;
+
+           switch(health) {
+               case 3:
+                Heart1.gameObject.SetActive(true);
+                Heart2.gameObject.SetActive(true);
+                Heart3.gameObject.SetActive(true);
+                break;
+
+               case 2:
+                Heart1.gameObject.SetActive(true);
+                Heart2.gameObject.SetActive(true);
+                Heart3.gameObject.SetActive(false);
+                break;
+
+               case 1:
+                Heart1.gameObject.SetActive(true);
+                Heart2.gameObject.SetActive(false);
+                Heart3.gameObject.SetActive(false);
+                break;
+
+               case 0:
+                Heart1.gameObject.SetActive(false);
+                Heart2.gameObject.SetActive(false);
+                Heart3.gameObject.SetActive(false);
+                gameOver.gameObject.SetActive(true);
+                Time.timeScale = 0;
+
+                break;
+           }
+        }
+    }
     
 
     private void Awake() {
@@ -16,12 +59,8 @@ public class GameOverController : MonoBehaviour
         
     }
 
-    public void PlayerDied() {
-        gameObject.SetActive(true);  
-
-   }
-
    void ReloadLevel() {
-      SceneManager.LoadScene(0);
+       Scene scene = SceneManager.GetActiveScene();
+      SceneManager.LoadScene(scene.buildIndex);
    }
 }

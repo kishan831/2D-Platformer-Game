@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
-    //Some Value for inspector panel
+    //Some Value for inspector panel    
     [SerializeField] public float MoveSpeed,JumpForce,Runspeed;
     private Rigidbody2D rb;
      
@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
     private Animator anim;
 
     public ScoreController scoreController;
+    public GameOverController gameOverController;
 
     private void Start() {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -43,12 +44,17 @@ public class Player : MonoBehaviour {
     //Actions For Movement Of Player
     private void Move() {
 
+        float moveX = 0f;
+
         var movement = Input.GetAxisRaw("Horizontal");
-        transform.position += new Vector3(movement,0,0) * Time.deltaTime * MoveSpeed;
+        Vector3 position = transform.position;
+        position.x += movement * MoveSpeed * Time.deltaTime;
+        transform.position = position;
+        
 
         if(Input.GetKey(KeyCode.D) && movement > 0) {
-
-             MoveSpeed = Runspeed;
+             
+             moveX = MoveSpeed;
              Vector3 temp = transform.localScale;
              temp.x = 1f;
              transform.localScale = temp;
@@ -57,7 +63,7 @@ public class Player : MonoBehaviour {
 
         else if( movement < 0 && Input.GetKey(KeyCode.A)) {
 
-            MoveSpeed = Runspeed;
+            moveX = -MoveSpeed;
             Vector3 temp = transform.localScale;
             temp.x = -1f;
             transform.localScale = temp;
@@ -71,7 +77,7 @@ public class Player : MonoBehaviour {
 
     //Checking Player Is On The Ground or Not
     bool IsGrounded() {
-        return Physics2D.Raycast(groundCheckpos.position,Vector2.down,0.1f,GroundLayer);
+        return Physics2D.OverlapCircle(groundCheckpos.position,0.2f,GroundLayer);
     }
 
 
@@ -88,8 +94,6 @@ public class Player : MonoBehaviour {
     }
 
     //Different Animation As per Need. 
-
-
     void SetJumpAnimation() {
         anim.SetTrigger("isJump");
     }
@@ -98,19 +102,17 @@ public class Player : MonoBehaviour {
             anim.SetTrigger("isCrouch");       
     }
 
+    //collectibles
     public void Collectibles() {
         Debug.Log("Key Collected");
         scoreController.IncScore(2);
     }
-
+   
+    //Taking Some Damage on player
     public void AttackOnPlayer() {
         Debug.Log("Player Is Being Attacked");
-        Destroy(gameObject);
-        ReloadLevel();
-    }
-
-    public void ReloadLevel() {
-       SceneManager.LoadScene(0);
+        GameOverController.health -= 1;
+    
     }
             
 
