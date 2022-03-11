@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -21,15 +19,17 @@ using UnityEngine.SceneManagement;
     private void onClick() {
         LevelStatus levelStatus = LevelManager.Instance.GetLevelStatus(LevelName);
         
-        switch(LevelName) {
-            case levelStatus.Locked :
+        switch(levelStatus) {
+
+            case LevelStatus.Locked:
+            Debug.Log("");
             break;
 
-            case levelStatus.UnLocked :
+            case LevelStatus.Unlocked :
             SceneManager.LoadScene(LevelName);
             break;
 
-            case levelStatus.Completed :
+            case LevelStatus.Completed :
             SceneManager.LoadScene(LevelName);
             break;
 
