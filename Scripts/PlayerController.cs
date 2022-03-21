@@ -116,7 +116,7 @@ public class PlayerController : MonoBehaviour {
     //Taking Some Damage on player
     public void AttackOnPlayer() {
         Debug.Log("Player Is Being Attacked");
-        GameOverController.health -= 1;
+        GameOverController.CurrentHealth.TakeDamage(1);
     
     }
             

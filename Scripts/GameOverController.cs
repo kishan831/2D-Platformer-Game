@@ -8,53 +8,24 @@ public class GameOverController : MonoBehaviour
 {
     [SerializeField] private Button restart;
     
-    public GameObject Heart1,Heart2,Heart3,gameOver;
-    public static int health;
+    public int MaxHealth = 3;
+    public int CurrentHealth;
+
+    public Animator anim;
 
     void Start() {
-        health = 3;
-        Heart1.gameObject.SetActive(true);
-        Heart2.gameObject.SetActive(true);
-        Heart3.gameObject.SetActive(true);
-        gameOver.gameObject.SetActive(false);
+   \   CurrentHealth = MaxHealth;
     }
 
-    void Update() {
-        if(health > 3) {
-            health = 3;
 
-           switch(health) {
-               case 3:
-                Heart1.gameObject.SetActive(true);
-                Heart2.gameObject.SetActive(true);
-                Heart3.gameObject.SetActive(true);
-                break;
+    void TakeDamage(int amount) {
+        CurrentHealth -= amount;
 
-               case 2:
-                Heart1.gameObject.SetActive(true);
-                Heart2.gameObject.SetActive(true);
-                Heart3.gameObject.SetActive(false);
-                break;
-
-               case 1:
-                Heart1.gameObject.SetActive(true);
-                Heart2.gameObject.SetActive(false);
-                Heart3.gameObject.SetActive(false);
-                break;
-
-               case 0:
-                Heart1.gameObject.SetActive(false);
-                Heart2.gameObject.SetActive(false);
-                Heart3.gameObject.SetActive(false);
-                gameOver.gameObject.SetActive(true);
-                Time.timeScale = 0;
-
-                break;
-           }
+        if(CurrentHealth <= 0) {
+            anim.SetBool("IsDead",true);
         }
     }
     
-
     private void Awake() {
         restart.onClick.AddListener(ReloadLevel);
         
